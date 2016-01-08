@@ -15,4 +15,19 @@
 			return $select;
 		}
 	}
+	
+	if( !function_exists('cmsLinkSort')){
+		function cmsLinkSort($name,$order,$column,$options = null ){
+			$class = empty($order['sort_type'])? "" : "_".$order['sort_type'];
+			if($order['sort_column'] == $column){
+				echo "SDfsdg";
+				$xhtml = sprintf('<th class ="sorting%s"  style="%s"   onclick="changeLinkSort(\'%s\',\'%s\')">%s </th>',
+							$class,$options['style'],$order['sort_type'],$column,$name);
+			}else{
+				$xhtml = sprintf('<th class ="sorting"  style="%s"  onclick="changeLinkSort(\'%s\',\'%s\')">%s </th>',
+							$options['style'],$order['sort_type'],$column,$name);
+			}
+			return $xhtml;
+		}
+	}
 ?>

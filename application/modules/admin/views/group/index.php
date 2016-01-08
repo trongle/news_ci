@@ -63,7 +63,9 @@
         <div class="x_panel">
                 <div class="dataTables_wrapper" role="grid">
                     <div class="dataTables_filter">
-                        <label>Search all columns: <input type="text"></label>
+                        <label>Search all columns: <input type="text" name="filter_search" value="<?php echo $filter['search_words'] ?>"></label>
+                        <button type="submit" name="clear" value="clear">Clear</button> 
+                        <button type="submit" name="ok">Search</button> 
                     </div>
                      <div id="status" class="dataTables_length">
                         <label>Show 
@@ -78,43 +80,76 @@
                         ?>
                          status</label>
                     </div>
-                    <table id="example" class="table table-striped jambo_table">
+                    <table id="my-table" class="table table-striped jambo_table">
                         <thead>
                             <tr class="headings" role="row">
-                               <th class="sorting_disabled" role="columnheader" rowspan="1" colspan="1" style="width: 41px;" aria-label="">
+                                <th class="sorting_disabled" role="columnheader" rowspan="1" colspan="1" style="width: 41px;" aria-label="">
                                     <div class="icheckbox_flat-green" style="position: relative;">
                                         <input type="checkbox" id="checkall">
                                         <ins class="iCheck-helper" ></ins>
                                     </div>
                                 </th>
-                                <th class="sorting_asc" style="width: 103px;" aria-sort="ascending" >Name </th>
-                                <th class="sorting"  style="width: 243px;">Created </th>
-                                <th class="sorting"  style="width: 124px;" >Created_by </th>
-                                <th class="sorting"  style="width: 123px;" >Status </th>
-                                <th class="sorting"  style="width: 68px;" >Ordering</th>
-                                <th class="sorting"  style="width: 83px;" >ID</th>
-                                <th class="no-link last sorting" role="columnheader" tabindex="0" aria-controls="example" rowspan="1" colspan="1" style="width: 71px;" aria-label="Action
-                                : activate to sort column ascending"><span class="nobr">Action</span>
-                                </th></tr>
+                             
+                                <?php echo cmsLinkSort("Name"      ,$order,"name",array("style"=>"width: 103px")) ?>
+                                <?php echo cmsLinkSort("Created"   ,$order,"created",array("style"=>"width: 100px")) ?>
+                                <?php echo cmsLinkSort("Created_by",$order,"created_by",array("style"=>"width: 100px")) ?>
+                                <?php echo cmsLinkSort("Status"    ,$order,"status",array("style"=>"width: 124px")) ?>
+                                <?php echo cmsLinkSort("Ordering"  ,$order,"ordering",array("style"=>"width: 123px")) ?>
+                                <?php echo cmsLinkSort("ID"        ,$order,"id",array("style"=>"width: 103px")) ?>
+                       <!--     <th class ="sorting"   style="width: 103px;" onclick="changeLinkSort('asc','name')">Name </th>
+                                <th class ="sorting"  style="width: 100px;">Created </th>
+                                <th class ="sorting"  style="width: 124px;" >Created_by </th>
+                                <th class ="sorting"  style="width: 123px;" >Status </th>
+                                <th class ="sorting"  style="width: 68px;" >Ordering</th>
+                                <th class ="sorting"  style="width: 83px;" >ID</th> -->
+                                <th style="width: 71px;"><span class="nobr">Action</span>
+                                </th>
+                            </tr>
+                            <?php 
+                                echo form_hidden('sort_type', '');
+                                echo form_hidden('sort_column', '');
+                            ?>
                         </thead>
                         <tbody role="alert" aria-live="polite" aria-relevant="all">
-                                <?php echo $xhtml ?>
+                            <?php echo $xhtml ?>
                         </tbody>
-                    </table>
-                    
+                    </table>              
                         <!--  PAGINATION  -->
-                            <?php echo $xhtml_info_page.$link_page ?>
-                  
+                            <?php echo $xhtml_info_page.$link_page ?> 
                 </div>
             </div>
     </div>
 </form>
 </div>
 <script type="text/javascript">
+    function submitForm(url){
+        if(url != null){
+            $("#adminForm").attr("action",url);
+        }
+        $("#adminForm").submit();
+    }
+    function changeLinkSort(sort,column){
+        sort = (sort=='asc')? "desc":"asc";
+        $("#my-table input[name = sort_type]").val(sort);
+        $("#my-table input[name = sort_column]").val(column);
+        submitForm();
+    }
+
     $(document).ready(function(){
         $("#status").change(function(){
-            $("#adminForm").submit();
+            submitForm();
+        })
+
+        $("button[name=clear]").click(function(){
+            submitForm();
+        })
+
+        $("input[name=filter_search]").keypress(function(e){
+            if(e.keyCode == 13){
+                e.preventDefault();
+                submitForm();
+            }
         })
     }) 
 
-</script>>
+</script>
